@@ -1,0 +1,17 @@
+sdk-version: 1.15.0
+name: daml-asset-transfer
+platform-version: 1.15.0
+version: 1.0.0
+source: daml
+parties:
+- Alice
+- Bob
+start-navigator: false
+json-api-options:
+- --address=0.0.0.0
+sandbox-options:
+- --ledgerid=create-daml-app-sandbox
+dependencies:
+  - daml-prim
+  - daml-stdlib
+  - daml-script

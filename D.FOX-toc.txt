@@ -1,0 +1,66 @@
+Contents
+1.0 Introduction	7
+1.1 Summary of Project	7
+1.2 Aims and Objectives	8
+1.3 Research Questions	8
+2.0 Background	9
+2.1 Blockchains and Distributed Ledgers	9
+2.1.2 Blockchain Design Trilemma	10
+2.2 Consensus Mechanisms	10
+2.2.1 Proof of Work	11
+2.2.1 Proof of Stake	12
+2.2.2 Proof of SpaceTime	12
+2.2.3 Practical Byzantine Fault Tolerance	13
+2.3 Smart Contracts	13
+2.3.2 Domain Specific and General-Purpose Programming Languages	13
+2.4 Ethereum Smart Contract Architecture	14
+2.5 Hyperledger Fabric Chaincode Architecture	14
+2.6 Daml Architecture	16
+3.0 Design Process	17
+3.1 Blockchain Consensus Mechanisms	17
+3.1.1 Proof of Work	17
+3.1.2 Proof of stake	17
+3.1.3 Proof of SpaceTime	17
+3.2 Smart Contract Design	17
+3.2.1 Asset Transfer Contract	17
+4.0 Implementation	19
+4.1 Consensus Mechanism	19
+4.1.1 NiceHash Mining Pool Bitcoin	19
+4.2.2 Ethereum 2.0 Proof of Stake Validator	19
+4.1.3 Chia Proof of SpaceTime Validator	22
+4.2 Smart Contract – Asset Transfer	23
+4.2.1 Hyperledger Fabric Go Language	23
+4.2.2 Ethereum Solidity – Asset Transfer	26
+4.2.3 Daml – Asset Transfer	28
+5.0 Discussion	31
+5.1 Consensus Findings	31
+5.2 Smart Contract Languages	36
+5.2.1 Solidity Findings	36
+5.2.2 Daml	38
+5.2.3 Hyperledger Fabric Go	40
+5.2.4 Further Comparisons	43
+5.3 Blockchain platforms overview	46
+6.0 Evaluation	47
+6.1 Success of the project	47
+6.2 Feedback Implementation	47
+7.0 Conclusion	48
+7.1 Personal Conclusion	48
+7.2 Further Work	48
+References	49
+Appendix	55
+Appendix 1: Consensus Algorithms	55
+1A: Proof of Work NiceHash Mining Pool Platform	55
+1B Bitcoin Core Wallet Mining (Attempt)	56
+1C: Proof of Stake Implementation process	57
+1D: Proof of SpaceTime Implementation process	67
+Appendix 2 : Smart Contracts Programs	72
+2A : Asset Transfer Hyperledger Fabric Golang Chaincode	72
+2B Asset transfer Solidity	85
+2C: Asset Transfer Daml	89
+Appendix 3 : Smart contract Testing	94
+3A: Hyperledger Fabric Go Tests	94
+3B: Solidity Tests	99
+3C: Daml Tests	102
+3D: README file Hyperledger Fabric Commands:	103
+
+

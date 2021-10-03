@@ -1,0 +1,22 @@
+template : is used to create a contract, we can think of this like a function or similar to how Solidity uses its contract which nests the contract functionality inside it.
+
+with  : follows the names of parameters and their type, just like variables
+
+where : sets authority 
+
+ensure : if condition evalute to true after ensure then create contract
+
+signatory :  who must consent to creation of the contract 
+
+observers : Parties who arnt signatory but still want to view the contract 
+
+controller: who exercises the choice
+
+nonconsuming : makes a choice does not get archived, only the controllers and signatories of the contract can view all consequences of the action, useful when exercising a choice more than once.
+
+ContractId a: is the return type, archives the current Contract, creates a new one. Where a is the What it returns is a reference to the new contract, in the form of a ContractId a is the tempate name
+
+<- : means run the action and bind the result
+exercise :  takes the ContractId, value of c where c is a choice in the template. Executed on server. 
+
+create : updates the ledger to server, createcmd builds up a list of commands to be send to the ledger, where create builds up a more flexible update executed directly by the ledger. 

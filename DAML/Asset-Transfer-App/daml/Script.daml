@@ -1,0 +1,88 @@
+module Script where
+import Daml.Script
+import DA.Assert
+import AssetTransfer
+-- Testing
+-- setup : Script()
+
+setup : Script ()
+setup = script do
+    alice <- allocatePartyWithHint "Alice" (PartyIdHint "Alice")
+    bob <- allocatePartyWithHint "Bob" (PartyIdHint "Bob")
+
+    aliceItem <- submit alice do
+      createCmd Asset with
+        approver = alice
+        owner = alice
+        name = "Laptop"
+        price = 1000.00
+        description = "Electronics"
+
+    aliceInitCheckAssets <- submit alice do
+      createCmd CheckAssets with
+        owner = alice
+        assets = []
+
+    bobInitCheckAssets <- submit bob do
+      createCmd CheckAssets with
+        owner = bob
+        assets = []
+
+    (aliceProposalToBob, aliceCurrentCheckAssets) <- submit alice do
+      exerciseCmd aliceItem Transfer with newOwner = bob, ownerCheckAssets = aliceInitCheckAssets, newOwnerAssets = bobInitCheckAssets
+
+
+    (bobItem, bobNewCheckAssets) <- submit bob do
+      exerciseCmd aliceProposalToBob AcceptOffer
+
+
+    name <- submit bob do
+      exerciseCmd bobItem NonControllerGetAssetName with actor = bob
+
+    name === "Laptop"
+
+    -- create new contract with name === 'Monitor'
+    newAsset <- submit bob do
+      exerciseCmd bobItem ChangeAssetName with newAssetName = "Monitor"
+
+    -- getname 
+    newAssetName <- submit bob do
+      exerciseCmd newAsset NonControllerGetAssetName with actor = bob
+
+    -- check if matches
+    newAssetName === "Monitor"
+
+    adjustedAsset <- submit bob do
+      exerciseCmd newAsset Adjustprice with newprice = Some 200.00
+
+    newprice <- submit bob do
+      exerciseCmd adjustedAsset GetPrice
+
+    newprice === 200.00
+
+    emptyInitCheckAssets <- submit alice do
+      createCmd CheckAssets with
+        owner = alice
+        assets = []
+
+    verifyEmpty <- submit alice do
+      exerciseCmd emptyInitCheckAssets CheckIfAdded with asset = adjustedAsset
+
+    verifyEmpty === False
+
+    inventoryWithAsset <- submit alice do
+      exerciseCmd emptyInitCheckAssets AddAsset with asset = adjustedAsset
+
+    verifyNotEmpty <- submit alice do
+      exerciseCmd inventoryWithAsset CheckIfAdded with asset = adjustedAsset
+
+    verifyNotEmpty === True
+
+    inventoryWithRemovedAsset <- submit alice do
+      exerciseCmd inventoryWithAsset RemoveAsset with asset = adjustedAsset
+
+    shouldHaveRemoved <- submit alice do
+      exerciseCmd inventoryWithRemovedAsset CheckIfAdded with asset = adjustedAsset
+
+    shouldHaveRemoved === False
+    return ()

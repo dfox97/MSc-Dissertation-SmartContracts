@@ -1,0 +1,138 @@
+module AssetTransfer where
+import DA.List (delete, elemIndex)
+type AssetID = ContractId Asset
+type CheckAssetsID = ContractId CheckAssets
+type MakeProposalID = ContractId MakeProposal
+  -- add to Transfer choice of Asset
+template Asset
+  with
+    owner  : Party
+    approver : Party
+    name   : Text
+    price  : Decimal
+    description : Text
+  where
+    ensure name /= ""
+    signatory approver
+
+    controller owner can
+      nonconsuming GetPrice: Decimal
+        do return price
+      Transfer : (MakeProposalID, CheckAssetsID)
+        with
+          newOwner : Party
+          ownerCheckAssets:  CheckAssetsID
+          newOwnerAssets:  CheckAssetsID
+        do
+          updatedSellerInventory <- exercise ownerCheckAssets RemoveAsset with asset = self
+          sale <- create MakeProposal with owner, newOwner, newOwnerAssets, ..
+          return (sale, updatedSellerInventory)
+
+    controller owner can
+      GetAssetName: Text
+        do return name
+        
+      Adjustprice: AssetID
+        with
+          newprice: Optional Decimal
+        do
+          case newprice of
+            Some y -> create this with price = y
+            None -> create this
+            
+      ChangeAssetName: AssetID
+        with
+            newAssetName: Text
+        do
+          create this
+            with
+              name = newAssetName
+
+    nonconsuming choice NonControllerGetAssetName: Text
+      with actor: Party
+      controller actor
+        do return name
+
+
+
+template CheckAssets
+  with
+    owner: Party
+    assets: [AssetID]
+  where
+    signatory owner
+
+    controller owner can
+      -- check if assetId is already added
+      nonconsuming CheckIfAdded: Bool
+        with
+          asset: AssetID
+        do
+         case elemIndex asset assets of
+          None ->  return False
+          Some y -> return True
+
+      -- create a new contract with added asset
+      AddAsset: CheckAssetsID
+        with
+          asset: AssetID
+        do
+          create this with assets = asset :: assets
+
+      -- create a new contract with removed asset
+      RemoveAsset: CheckAssetsID
+        with
+          asset: AssetID
+        do
+          let newAssets = delete asset assets
+          create this with
+            assets = newAssets
+template Operator
+  with
+    approver: Party
+    owner: Party
+    newOwner: Party
+  where
+    signatory approver, owner, newOwner
+
+    controller approver can
+      UpdateInventories: (CheckAssetsID,CheckAssetsID)
+        with
+          asset: ContractId Asset
+          ownerCheckAssets: CheckAssetsID
+          newOwnerAssets: CheckAssetsID
+        do
+
+          updatedSellerInventory <- exercise ownerCheckAssets RemoveAsset with asset = asset
+
+          updatedBuyerInventory <- exercise newOwnerAssets AddAsset with asset = asset
+
+          return (updatedSellerInventory, updatedBuyerInventory)
+
+
+template MakeProposal
+  with
+    owner: Party
+    newOwner: Party
+    newOwnerAssets:  CheckAssetsID
+    approver : Party
+    name   : Text
+    price  : Decimal
+    description : Text
+  where
+    signatory owner
+
+    controller newOwner can
+      AcceptOffer: (AssetID, CheckAssetsID)
+        do
+          product <- create Asset with
+            owner = newOwner
+            approver = approver
+            name = name
+            price = price
+            description = description
+    
+          updatedBuyerInventory <- exercise newOwnerAssets AddAsset with asset = product
+          
+          return (product, updatedBuyerInventory)
+
