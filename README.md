@@ -3,7 +3,6 @@ The aim of this thesis is to compare blockchain and smart contract technologies 
 ![image](https://user-images.githubusercontent.com/61083107/142502004-d2a518b9-fa8a-44fb-9779-d240e6804dcc.png)
 
 # **Asset Transfer Smart Contracts** #
-![image](https://user-images.githubusercontent.com/61083107/142502047-ea90b21a-c9b6-4d6f-a996-1bfdd6007b15.png)
 
 ![image](https://user-images.githubusercontent.com/61083107/142502072-7cf873a3-0e00-4726-9308-9c5b7ea9a61a.png)
 
